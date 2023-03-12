@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Concept;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Traits\ResponseApi;
 
 class ConceptController extends Controller
