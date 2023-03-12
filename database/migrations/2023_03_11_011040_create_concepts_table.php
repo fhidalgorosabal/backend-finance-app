@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('concepts', function (Blueprint $table) {
             $table->id();
+            $table->string('description', 100);
+            $table->enum('type', ['Expense', 'Ingress']);
             $table->timestamps();
         });
     }
