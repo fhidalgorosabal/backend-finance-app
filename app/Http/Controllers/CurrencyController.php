@@ -94,7 +94,7 @@ class CurrencyController extends Controller
             ]);
 
             if ($updated) {
-                return $this->responseData($currency, 'Se ha actualizado la moneda correctamente.', 201);
+                return $this->responseData($currency, 'Se ha actualizado la moneda correctamente.');
             }
 
         } catch (\Exception $e) {
