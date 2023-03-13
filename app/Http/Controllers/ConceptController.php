@@ -86,7 +86,7 @@ class ConceptController extends Controller
             ]);
 
             if ($updated) {
-                return $this->responseData($concept, 'Se ha actualizado el concepto correctamente.', 201);
+                return $this->responseData($concept, 'Se ha actualizado el concepto correctamente.');
             }
 
         } catch (\Exception $e) {

@@ -15,7 +15,16 @@ return new class extends Migration
     {
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
+            $table->unsignedBigInteger('concept_id');
+            $table->string('description', 150)->nullable();
+            $table->decimal('amount', 10, 2);
+            $table->unsignedBigInteger('currency_id');
+            $table->decimal('actual_amount', 10, 2);
             $table->timestamps();
+
+            $table->foreign('concept_id')->references('id')->on('concepts');
+            $table->foreign('currency_id')->references('id')->on('currencies');
         });
     }
 
