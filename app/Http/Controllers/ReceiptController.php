@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Traits\ResponseApi;
+use App\Http\Controllers\Traits\Type;
 
 class ReceiptController extends Controller
 {
     use ResponseApi;
+    use Type;
 
     /**
      * Display a listing of the resource.
@@ -34,7 +36,8 @@ class ReceiptController extends Controller
                 'type' => 'required|in:Expense,Ingress'
             ]);
 
-            return $this->getReceipts($validatedData['type']);
+            $receipts = $this->getReceipts($validatedData['type']);
+            return $this->responseData($receipts, 'Listado de los comprobantes de '.$this->getTypeName($validatedData['type']));
 
         } catch (\Exception $e) {
             return $this->responseError($e, 'No se pudo obtener el listado de comprobantes.');

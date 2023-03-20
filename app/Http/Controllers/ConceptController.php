@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Concept;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Traits\ResponseApi;
+use App\Http\Controllers\Traits\Type;
 
 class ConceptController extends Controller
 {
     use ResponseApi;
+    use Type;
 
     /**
      * Display a listing of the resource.
@@ -34,7 +36,8 @@ class ConceptController extends Controller
                 'type' => 'required|in:Expense,Ingress'
             ]);
 
-            return $this->getConcepts($validatedData['type']);
+            $concepts = $this->getConcepts($validatedData['type']);
+            return $this->responseData($concepts, 'Listado de los conceptos de '.$this->getTypeName($validatedData['type']));
 
         } catch (\Exception $e) {
             return $this->responseError($e, 'No se pudo obtener el listado de conceptos.');
