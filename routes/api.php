@@ -24,6 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('concept', ConceptController::class);
 
+Route::post('concept/list', [ ConceptController::class, 'list' ]);
+
 Route::apiResource('currency', CurrencyController::class);
 
 Route::apiResource('receipt', ReceiptController::class);
+
+Route::post('receipt/list', [ ReceiptController::class, 'list' ]);

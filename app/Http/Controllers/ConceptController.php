@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Concept;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Traits\ResponseApi;
+use App\Http\Controllers\Traits\Type;
 
 class ConceptController extends Controller
 {
     use ResponseApi;
+    use Type;
 
     /**
      * Display a listing of the resource.
@@ -17,8 +19,44 @@ class ConceptController extends Controller
      */
     public function index()
     {
-        $concepts = Concept::get();
+        $concepts = $this->getConcepts();
         return $this->responseData($concepts, 'Listado de los conceptos');
+    }
+
+    /**
+     * Display a listing of the resource for type.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'type' => 'required|in:Expense,Ingress'
+            ]);
+
+            $concepts = $this->getConcepts($validatedData['type']);
+            return $this->responseData($concepts, 'Listado de los conceptos de '.$this->getTypeName($validatedData['type']));
+
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'No se pudo obtener el listado de conceptos.');
+        }
+    }
+
+    /**
+     *  Returns a listing of the resource.
+     *
+     * @param  string  $type  Receipt type or null. [ Expense,Ingress ]
+     * @return \Illuminate\Http\Response
+     */
+    private function getConcepts($type = null)
+    {
+        if ($type) {
+            return Concept::where('type', '=', $type)->get();
+        } else {
+            return Concept::get();
+        }
     }
 
     /**
