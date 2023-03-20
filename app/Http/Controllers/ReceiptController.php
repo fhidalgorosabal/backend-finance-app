@@ -17,17 +17,53 @@ class ReceiptController extends Controller
      */
     public function index()
     {
-        $receipts = Receipt::join('concepts', 'receipts.concept_id', '=', 'concepts.id')
-                        ->join('currencies', 'receipts.currency_id', '=', 'currencies.id')
-                        ->select(
-                            'receipts.id',
-                            'receipts.amount',
-                            'receipts.date',
-                            'concepts.description as concept',
-                            'currencies.initials as currency',
-                            'receipts.actual_amount',
-                        )->get();
+        $receipts = $this->getReceipts();
         return $this->responseData($receipts, 'Listado de los comprobantes');
+    }
+
+    /**
+     * Display a listing of the resource for type.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'type' => 'required|in:Expense,Ingress'
+            ]);
+
+            return $this->getReceipts($validatedData['type']);
+
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'No se pudo obtener el listado de comprobantes.');
+        }
+    }
+
+    /**
+     *  Returns a listing of the resource.
+     *
+     * @param  string  $type  Receipt type or null. [ Expense,Ingress ]
+     * @return \Illuminate\Http\Response
+     */
+    private function getReceipts($type = null)
+    {
+        $result = Receipt::join('concepts', 'receipts.concept_id', '=', 'concepts.id')
+                    ->join('currencies', 'receipts.currency_id', '=', 'currencies.id')
+                    ->select(
+                        'receipts.id',
+                        'receipts.amount',
+                        'receipts.date',
+                        'concepts.description as concept',
+                        'concepts.type as type',
+                        'currencies.initials as currency',
+                        'receipts.actual_amount',
+                    );
+        if ($type) {
+            $result = $result->where('concepts.type', '=', $type);
+        }
+        return $result->get();
     }
 
     /**

@@ -27,3 +27,5 @@ Route::apiResource('concept', ConceptController::class);
 Route::apiResource('currency', CurrencyController::class);
 
 Route::apiResource('receipt', ReceiptController::class);
+
+Route::post('receipt/list', [ ReceiptController::class, 'list' ]);
