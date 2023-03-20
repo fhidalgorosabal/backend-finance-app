@@ -17,8 +17,43 @@ class ConceptController extends Controller
      */
     public function index()
     {
-        $concepts = Concept::get();
+        $concepts = $this->getConcepts();
         return $this->responseData($concepts, 'Listado de los conceptos');
+    }
+
+    /**
+     * Display a listing of the resource for type.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'type' => 'required|in:Expense,Ingress'
+            ]);
+
+            return $this->getConcepts($validatedData['type']);
+
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'No se pudo obtener el listado de conceptos.');
+        }
+    }
+
+    /**
+     *  Returns a listing of the resource.
+     *
+     * @param  string  $type  Receipt type or null. [ Expense,Ingress ]
+     * @return \Illuminate\Http\Response
+     */
+    private function getConcepts($type = null)
+    {
+        if ($type) {
+            return Concept::where('type', '=', $type)->get();
+        } else {
+            return Concept::get();
+        }
     }
 
     /**
