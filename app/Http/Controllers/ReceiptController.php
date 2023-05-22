@@ -6,6 +6,7 @@ use App\Models\Receipt;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Traits\ResponseApi;
 use App\Http\Controllers\Traits\Type;
+use App\Http\Utils\Utils;
 
 class ReceiptController extends Controller
 {
@@ -83,17 +84,18 @@ class ReceiptController extends Controller
                 'concept_id' => 'required',
                 'description' => 'nullable|string',
                 'amount' => 'required|numeric',
-                'currency_id' => 'required',
-                'actual_amount' => 'required|numeric'
+                'currency_id' => 'required'
             ]);
+
+            $actual_amount = Utils::getExchangeRate($validatedData['currency_id']) * $validatedData['amount'];
 
             $receipt = Receipt::create([
                 'date' => $validatedData['date'],
                 'concept_id' => $validatedData['concept_id'],
                 'description' => $validatedData['description'],
-                'amount' => $validatedData['amount'],
+                'amount' => doubleval($validatedData['amount']),
                 'currency_id' => $validatedData['currency_id'],
-                'actual_amount' => $validatedData['actual_amount'],
+                'actual_amount' => doubleval($actual_amount),
             ]);
 
             if ($receipt) {
@@ -140,13 +142,16 @@ class ReceiptController extends Controller
             ]);
 
             $receipt = Receipt::findOrFail($id);
+
+            $actual_amount = Utils::getExchangeRate($validatedData['currency_id']) * $validatedData['amount'];
+
             $updated = $receipt->update([
                 'date' => $validatedData['date'],
                 'concept_id' => $validatedData['concept_id'],
                 'description' => $validatedData['description'],
-                'amount' => $validatedData['amount'],
+                'amount' => doubleval($validatedData['amount']),
                 'currency_id' => $validatedData['currency_id'],
-                'actual_amount' => $validatedData['actual_amount'],
+                'actual_amount' => doubleval($actual_amount),
             ]);
 
             if ($updated) {
