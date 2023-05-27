@@ -137,8 +137,7 @@ class ReceiptController extends Controller
                 'concept_id' => 'required',
                 'description' => 'nullable|string',
                 'amount' => 'required|numeric',
-                'currency_id' => 'required',
-                'actual_amount' => 'required|numeric'
+                'currency_id' => 'required'
             ]);
 
             $receipt = Receipt::findOrFail($id);
