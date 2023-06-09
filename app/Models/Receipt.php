@@ -20,6 +20,7 @@ class Receipt extends Model
         'description',
         'amount',
         'currency_id',
-        'actual_amount'
+        'actual_amount',
+        'account_id'
     ];
 }

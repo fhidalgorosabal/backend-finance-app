@@ -34,7 +34,8 @@ class CurrencyController extends Controller
                 'initials' => 'required|string|max:3|unique:currencies',
                 'description' => 'required|string|max:100|unique:currencies',
                 'exchange_rate' => 'required|numeric',
-                'is_default' => 'nullable|boolean'
+                'is_default' => 'nullable|boolean',
+                'active' => 'nullable|boolean'
             ]);
 
             $currency = Currency::create([
@@ -42,6 +43,7 @@ class CurrencyController extends Controller
                 'description' => $validatedData['description'],
                 'exchange_rate' => $validatedData['exchange_rate'],
                 'is_default' => $validatedData['is_default'],
+                'active' => $validatedData['active'],
             ]);
 
             if ($currency) {
@@ -62,9 +64,9 @@ class CurrencyController extends Controller
     {
         try {
             $currency = Currency::findOrFail($id);
-            return $this->responseData($currency, 'Detalles de la moneda: '.$id.'.');
+            return $this->responseData($currency, 'Detalles de la moneda: '.$currency->initials.'.');
         } catch (\Exception $e) {
-            return $this->responseError($e, 'No se pudo obtener la moneda: '.$id.'.');
+            return $this->responseError($e, 'No se pudo obtener la moneda: '.$currency->initials.'.');
         }
     }
 
@@ -79,10 +81,11 @@ class CurrencyController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'initials' => 'required|string|max:255|unique:currencies,initials,'.$id,
+                'initials' => 'required|string|max:3|unique:currencies,initials,'.$id,
                 'description' => 'required|string|max:100|unique:currencies,description,'.$id,
                 'exchange_rate' => 'required|numeric',
-                'is_default' => 'nullable|boolean'
+                'is_default' => 'nullable|boolean',
+                'active' => 'nullable|boolean'
             ]);
 
             $currency = Currency::findOrFail($id);
@@ -91,6 +94,7 @@ class CurrencyController extends Controller
                 'description' => $validatedData['description'],
                 'exchange_rate' => $validatedData['exchange_rate'],
                 'is_default' => $validatedData['is_default'],
+                'active' => $validatedData['active'],
             ]);
 
             if ($updated) {
@@ -115,7 +119,7 @@ class CurrencyController extends Controller
             $currency->delete();
             return $this->responseData($currency, 'Se ha eliminado la moneda correctamente.');
         } catch (\Exception $e) {
-            return $this->responseError($e, 'No se pudo eliminar la moneda: '.$id.'.');
+            return $this->responseError($e, 'No se pudo eliminar la moneda: '.$currency->initials.'.');
         }
     }
 }

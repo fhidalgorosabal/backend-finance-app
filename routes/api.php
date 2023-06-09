@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConceptController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReceiptController;
+use App\Http\Controllers\AccountController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,3 +32,5 @@ Route::apiResource('currency', CurrencyController::class);
 Route::apiResource('receipt', ReceiptController::class);
 
 Route::post('receipt/list', [ ReceiptController::class, 'list' ]);
+
+Route::apiResource('account', AccountController::class);
