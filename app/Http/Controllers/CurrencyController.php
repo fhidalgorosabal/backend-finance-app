@@ -34,8 +34,7 @@ class CurrencyController extends Controller
                 'initials' => 'required|string|max:3|unique:currencies',
                 'description' => 'required|string|max:100|unique:currencies',
                 'exchange_rate' => 'required|numeric',
-                'is_default' => 'nullable|boolean',
-                'active' => 'nullable|boolean'
+                'is_default' => 'nullable|boolean'
             ]);
 
             $currency = Currency::create([
@@ -43,7 +42,7 @@ class CurrencyController extends Controller
                 'description' => $validatedData['description'],
                 'exchange_rate' => $validatedData['exchange_rate'],
                 'is_default' => $validatedData['is_default'],
-                'active' => $validatedData['active'],
+                'active' => true
             ]);
 
             if ($currency) {

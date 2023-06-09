@@ -35,15 +35,14 @@ class AccountController extends Controller
             $validatedData = $request->validate([
                 'code' => 'required|string|max:10|unique:accounts',
                 'description' => 'required|string|max:100|unique:accounts',
-                'currency_id' => 'required',
-                'active' => 'nullable|boolean'                
+                'currency_id' => 'required'            
             ]);
 
             $account = Account::create([
                 'code' => $validatedData['code'],
                 'description' => $validatedData['description'],
                 'currency_id' => $validatedData['currency_id'],
-                'active' => $validatedData['active'],
+                'active' => true
             ]);
 
             if ($account) {
