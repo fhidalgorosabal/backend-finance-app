@@ -82,7 +82,7 @@ class ReceiptController extends Controller
             $validatedData = $request->validate([
                 'date' => 'required|date',
                 'concept_id' => 'required',
-                'description' => 'nullable|string',
+                'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
                 'currency_id' => 'required'
             ]);
@@ -135,7 +135,7 @@ class ReceiptController extends Controller
             $validatedData = $request->validate([
                 'date' => 'required|date',
                 'concept_id' => 'required',
-                'description' => 'nullable|string',
+                'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
                 'currency_id' => 'required'
             ]);

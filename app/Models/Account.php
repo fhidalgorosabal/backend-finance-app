@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Currency extends Model
+class Account extends Model
 {
     use HasFactory;
 
@@ -15,10 +15,9 @@ class Currency extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'initials',
+        'code',
         'description',
-        'exchange_rate',
-        'is_default',
+        'currency_id',
         'active'
     ];
 }
