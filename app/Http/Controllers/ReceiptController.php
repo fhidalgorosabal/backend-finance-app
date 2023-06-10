@@ -55,6 +55,7 @@ class ReceiptController extends Controller
     {
         $result = Receipt::join('concepts', 'receipts.concept_id', '=', 'concepts.id')
                     ->join('currencies', 'receipts.currency_id', '=', 'currencies.id')
+                    ->join('accounts', 'receipts.account_id', '=', 'accounts.id')
                     ->select(
                         'receipts.id',
                         'receipts.amount',
@@ -62,6 +63,7 @@ class ReceiptController extends Controller
                         'concepts.description as concept',
                         'concepts.type as type',
                         'currencies.initials as currency',
+                        'accounts.description as account',
                         'receipts.actual_amount',
                     );
         if ($type) {
@@ -84,7 +86,8 @@ class ReceiptController extends Controller
                 'concept_id' => 'required',
                 'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
-                'currency_id' => 'required'
+                'currency_id' => 'required',
+                'account_id' => 'required'
             ]);
 
             $actual_amount = Utils::getExchangeRate($validatedData['currency_id']) * $validatedData['amount'];
@@ -95,6 +98,7 @@ class ReceiptController extends Controller
                 'description' => $validatedData['description'],
                 'amount' => doubleval($validatedData['amount']),
                 'currency_id' => $validatedData['currency_id'],
+                'account_id' => $validatedData['account_id'],
                 'actual_amount' => doubleval($actual_amount),
             ]);
 
@@ -137,7 +141,8 @@ class ReceiptController extends Controller
                 'concept_id' => 'required',
                 'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
-                'currency_id' => 'required'
+                'currency_id' => 'required',
+                'account_id' => 'required'
             ]);
 
             $receipt = Receipt::findOrFail($id);
@@ -150,6 +155,7 @@ class ReceiptController extends Controller
                 'description' => $validatedData['description'],
                 'amount' => doubleval($validatedData['amount']),
                 'currency_id' => $validatedData['currency_id'],
+                'account_id' => $validatedData['account_id'],
                 'actual_amount' => doubleval($actual_amount),
             ]);
 
