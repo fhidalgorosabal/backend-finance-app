@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Receipt;
-use App\Models\Bank;
+use App\Models\Account;
 
-class Account extends Model
+class Bank extends Model
 {
     use HasFactory;
 
@@ -17,19 +16,18 @@ class Account extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'code',
-        'description',
-        'currency_id',
+        'swift',
+        'bank_name',
+        'cis',
+        'branch_name',
+        'address',
+        'phone_number',
+        'email',
         'active'
     ];
 
-    public function receipts()
+    public function accounts()
     {
-        return $this->hasMany(Receipt::class);
-    }
-
-    public function bank()
-    {
-        return $this->belongsTo(Bank::class);
+        return $this->hasMany(Account::class);
     }
 }

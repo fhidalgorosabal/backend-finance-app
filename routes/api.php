@@ -7,6 +7,7 @@ use App\Http\Controllers\ConceptController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\BankController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,3 +35,5 @@ Route::apiResource('receipt', ReceiptController::class);
 Route::post('receipt/list', [ ReceiptController::class, 'list' ]);
 
 Route::apiResource('account', AccountController::class);
+
+Route::apiResource('bank', BankController::class);

@@ -161,6 +161,7 @@ class ReceiptController extends Controller
             ]);
 
             $receipt = Receipt::findOrFail($id);
+            
             $actualAmount = $this->calculateActualAmount($validatedData);
 
             if ($this->isAmountValid($validatedData, $actualAmount)) {

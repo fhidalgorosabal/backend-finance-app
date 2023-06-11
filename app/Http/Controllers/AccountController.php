@@ -5,12 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Traits\ResponseApi;
-use App\Http\Controllers\Traits\Type;
 
 class AccountController extends Controller
 {
     use ResponseApi;
-    use Type;
 
     /**
      * Display a listing of the resource.
@@ -26,7 +24,7 @@ class AccountController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreAccountRequest  $request
+     * @param  \App\Http\Requests\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -65,7 +63,7 @@ class AccountController extends Controller
             $account = Account::findOrFail($id);
             return $this->responseData($account, 'Detalles de la cuenta: '.$id.'.');
         } catch (\Exception $e) {
-            return $this->responseError($e, 'No se pudo obtener la cuenta: '.$account->code.'.');
+            return $this->responseError($e, 'No se pudo obtener la cuenta: '.$id.'.');
         }
     }
 
@@ -87,6 +85,7 @@ class AccountController extends Controller
             ]);
 
             $account = Account::findOrFail($id);
+
             $updated = $account->update([
                 'code' => $validatedData['code'],
                 'description' => $validatedData['description'],
@@ -116,7 +115,7 @@ class AccountController extends Controller
             $account->delete();
             return $this->responseData($account, 'Se ha eliminado la cuenta correctamente.');
         } catch (\Exception $e) {
-            return $this->responseError($e, 'No se pudo eliminar la cuenta: '.$account->code.'.');
+            return $this->responseError($e, 'No se pudo eliminar la cuenta: '.$id.'.');
         }
     }
 }

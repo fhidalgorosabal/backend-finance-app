@@ -63,9 +63,9 @@ class CurrencyController extends Controller
     {
         try {
             $currency = Currency::findOrFail($id);
-            return $this->responseData($currency, 'Detalles de la moneda: '.$currency->initials.'.');
+            return $this->responseData($currency, 'Detalles de la moneda: '.$id.'.');
         } catch (\Exception $e) {
-            return $this->responseError($e, 'No se pudo obtener la moneda: '.$currency->initials.'.');
+            return $this->responseError($e, 'No se pudo obtener la moneda: '.$id.'.');
         }
     }
 
@@ -88,6 +88,7 @@ class CurrencyController extends Controller
             ]);
 
             $currency = Currency::findOrFail($id);
+            
             $updated = $currency->update([
                 'initials' => $validatedData['initials'],
                 'description' => $validatedData['description'],
@@ -118,7 +119,7 @@ class CurrencyController extends Controller
             $currency->delete();
             return $this->responseData($currency, 'Se ha eliminado la moneda correctamente.');
         } catch (\Exception $e) {
-            return $this->responseError($e, 'No se pudo eliminar la moneda: '.$currency->initials.'.');
+            return $this->responseError($e, 'No se pudo eliminar la moneda: '.$id.'.');
         }
     }
 }
