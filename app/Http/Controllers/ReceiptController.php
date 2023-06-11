@@ -7,9 +7,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Traits\ResponseApi;
 use App\Http\Controllers\Traits\Type;
 use App\Http\Utils\Utils;
+use App\Rules\ValidateSameMonth;
 
 class ReceiptController extends Controller
 {
+
+    const EXPENSE = 'Expense';
+    const INGRESS = 'Ingress';
+
     use ResponseApi;
     use Type;
 
@@ -80,9 +85,11 @@ class ReceiptController extends Controller
      */
     public function store(Request $request)
     {
+        $ERROR_MESSAGE = 'No se pudo crear el comprobante.';
+
         try {
             $validatedData = $request->validate([
-                'date' => 'required|date',
+                'date' => ['required', 'date', 'date_format:Y/m/d', new ValidateSameMonth],
                 'concept_id' => 'required',
                 'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
@@ -90,23 +97,29 @@ class ReceiptController extends Controller
                 'account_id' => 'required'
             ]);
 
-            $actual_amount = Utils::getExchangeRate($validatedData['currency_id']) * $validatedData['amount'];
+            $actualAmount = $this->calculateActualAmount($validatedData);
 
-            $receipt = Receipt::create([
-                'date' => $validatedData['date'],
-                'concept_id' => $validatedData['concept_id'],
-                'description' => $validatedData['description'],
-                'amount' => doubleval($validatedData['amount']),
-                'currency_id' => $validatedData['currency_id'],
-                'account_id' => $validatedData['account_id'],
-                'actual_amount' => doubleval($actual_amount),
-            ]);
+            if ($this->isAmountValid($validatedData, $actualAmount)) {
+                $receipt = Receipt::create([
+                    'date' => $validatedData['date'],
+                    'concept_id' => $validatedData['concept_id'],
+                    'description' => $validatedData['description'],
+                    'amount' => doubleval($validatedData['amount']),
+                    'currency_id' => $validatedData['currency_id'],
+                    'account_id' => $validatedData['account_id'],
+                    'actual_amount' => doubleval($actualAmount),
+                ]);
 
-            if ($receipt) {
-                return $this->responseData($receipt, 'Se ha creado el comprobante correctamente.', 201);
+                if ($receipt) {
+                    return $this->responseData($receipt, 'Se ha creado el comprobante correctamente.', 201);
+                } else {
+                    return $this->getError($this->newMessageBag('Hubo un error al crear el comprobante, inténtelo de nuevo.'), $ERROR_MESSAGE);
+                }
+            } else {
+                return $this->getError($this->newMessageBag('El saldo de la cuenta no es suficiente'), $ERROR_MESSAGE);
             }
         } catch (\Exception $e) {
-            return $this->responseError($e, 'No se pudo crear el comprobante.');
+            return $this->responseError($e, $ERROR_MESSAGE );
         }
     }
 
@@ -125,7 +138,7 @@ class ReceiptController extends Controller
             return $this->responseError($e, 'No se pudo obtener el comprobante: '.$id.'.');
         }
     }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -135,9 +148,11 @@ class ReceiptController extends Controller
      */
     public function update(Request $request, int $id)
     {
+        $ERROR_MESSAGE = 'No se pudo actualizar el comprobante.';
+
         try {
             $validatedData = $request->validate([
-                'date' => 'required|date',
+                'date' => ['required', 'date', 'date_format:Y/m/d', new ValidateSameMonth],
                 'concept_id' => 'required',
                 'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
@@ -146,24 +161,29 @@ class ReceiptController extends Controller
             ]);
 
             $receipt = Receipt::findOrFail($id);
+            $actualAmount = $this->calculateActualAmount($validatedData);
 
-            $actual_amount = Utils::getExchangeRate($validatedData['currency_id']) * $validatedData['amount'];
+            if ($this->isAmountValid($validatedData, $actualAmount)) {
+                $updated = $receipt->update([
+                    'date' => $validatedData['date'],
+                    'concept_id' => $validatedData['concept_id'],
+                    'description' => $validatedData['description'],
+                    'amount' => doubleval($validatedData['amount']),
+                    'currency_id' => $validatedData['currency_id'],
+                    'account_id' => $validatedData['account_id'],
+                    'actual_amount' => doubleval($actualAmount),
+                ]);
 
-            $updated = $receipt->update([
-                'date' => $validatedData['date'],
-                'concept_id' => $validatedData['concept_id'],
-                'description' => $validatedData['description'],
-                'amount' => doubleval($validatedData['amount']),
-                'currency_id' => $validatedData['currency_id'],
-                'account_id' => $validatedData['account_id'],
-                'actual_amount' => doubleval($actual_amount),
-            ]);
-
-            if ($updated) {
-                return $this->responseData($receipt, 'Se ha actualizado el comprobante correctamente.');
+                if ($updated) {
+                    return $this->responseData($receipt, 'Se ha actualizado el comprobante correctamente.');
+                } else {
+                    return $this->getError($this->newMessageBag('Hubo un error al actualizar el comprobante, inténtelo de nuevo.'), $ERROR_MESSAGE);
+                }
+            } else {
+                return $this->getError($this->newMessageBag('El saldo de la cuenta no es suficiente'), $ERROR_MESSAGE);
             }
         } catch (\Exception $e) {
-            return $this->responseError($e, 'No se pudo actualizar el comprobante.');
+            return $this->responseError($e, $ERROR_MESSAGE);
         }
     }
 
@@ -183,4 +203,36 @@ class ReceiptController extends Controller
             return $this->responseError($e, 'No se pudo eliminar el comprobante: '.$id.'.');
         }
     }
+
+    /**
+     * Checks if the amount is valid.
+     *
+     * @param  array  $data
+     * @param  float  $actualAmount
+     * @return bool
+     */
+    private function isAmountValid($data, $actualAmount)
+    {
+        $conceptType = Utils::conceptType($data['concept_id']);
+    
+        if ($conceptType === ReceiptController::EXPENSE) {
+            $ingress = Utils::totalAmountOfAccount($data['account_id'], ReceiptController::INGRESS);
+            $expense = Utils::totalAmountOfAccount($data['account_id'], ReceiptController::EXPENSE);
+            return ($actualAmount <= ($ingress - $expense));
+        }
+    
+        return true;
+    }
+    
+    /**
+     * Calculates the actual amount.
+     *
+     * @param  array  $data
+     * @return float
+     */
+    private function calculateActualAmount($data)
+    {
+        return Utils::getExchangeRate($data['currency_id']) * $data['amount'];
+    }
+    
 }

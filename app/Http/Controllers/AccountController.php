@@ -33,7 +33,7 @@ class AccountController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'code' => 'required|string|max:10|unique:accounts',
+                'code' => 'required|string|max:20|unique:accounts',
                 'description' => 'required|string|max:100|unique:accounts',
                 'currency_id' => 'required'            
             ]);
@@ -80,7 +80,7 @@ class AccountController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'code' => 'required|string|max:10|unique:accounts,code,'.$id,
+                'code' => 'required|string|max:20|unique:accounts,code,'.$id,
                 'description' => 'required|string|max:100|unique:accounts,description,'.$id,
                 'currency_id' => 'required',
                 'active' => 'nullable|boolean'   

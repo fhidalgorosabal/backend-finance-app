@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Concept;
+use App\Models\Currency;
+use App\Models\Account;
 
 class Receipt extends Model
 {
@@ -23,4 +26,19 @@ class Receipt extends Model
         'actual_amount',
         'account_id'
     ];
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
+    public function concept()
+    {
+        return $this->belongsTo(Concept::class);
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
 }

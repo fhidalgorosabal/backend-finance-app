@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();            
-            $table->string('code', 10);
+            $table->string('code', 20);
             $table->string('description', 100);
             $table->unsignedBigInteger('currency_id');
             $table->boolean('active')->default(true);

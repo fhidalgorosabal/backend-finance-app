@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Receipt;
 
 class Currency extends Model
 {
@@ -21,4 +22,9 @@ class Currency extends Model
         'is_default',
         'active'
     ];
+
+    public function receipts()
+    {
+        return $this->hasMany(Receipt::class);
+    }
 }
