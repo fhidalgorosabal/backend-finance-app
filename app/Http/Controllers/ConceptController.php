@@ -118,6 +118,7 @@ class ConceptController extends Controller
             ]);
 
             $concept = Concept::findOrFail($id);
+            
             $updated = $concept->update([
                 'description' => $validatedData['description'],
                 'type' => $validatedData['type']
