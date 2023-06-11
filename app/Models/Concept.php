@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Receipt;
 
 class Concept extends Model
 {
@@ -18,4 +19,9 @@ class Concept extends Model
         'description',
         'type'
     ];
+
+    public function receipts()
+    {
+        return $this->hasMany(Receipt::class);
+    }
 }
