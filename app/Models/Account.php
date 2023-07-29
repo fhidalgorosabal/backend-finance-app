@@ -20,6 +20,7 @@ class Account extends Model
         'code',
         'description',
         'currency_id',
+        'bank_id',
         'active'
     ];
 

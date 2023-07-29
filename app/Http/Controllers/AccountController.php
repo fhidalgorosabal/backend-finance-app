@@ -33,13 +33,15 @@ class AccountController extends Controller
             $validatedData = $request->validate([
                 'code' => 'required|string|max:20|unique:accounts',
                 'description' => 'required|string|max:100|unique:accounts',
-                'currency_id' => 'required'            
+                'currency_id' => 'required',      
+                'bank_id' => 'required'      
             ]);
 
             $account = Account::create([
                 'code' => $validatedData['code'],
                 'description' => $validatedData['description'],
                 'currency_id' => $validatedData['currency_id'],
+                'bank_id' => $validatedData['bank_id'],
                 'active' => true
             ]);
 
@@ -80,7 +82,8 @@ class AccountController extends Controller
             $validatedData = $request->validate([
                 'code' => 'required|string|max:20|unique:accounts,code,'.$id,
                 'description' => 'required|string|max:100|unique:accounts,description,'.$id,
-                'currency_id' => 'required',
+                'currency_id' => 'required',     
+                'bank_id' => 'required', 
                 'active' => 'nullable|boolean'   
             ]);
 
@@ -90,6 +93,7 @@ class AccountController extends Controller
                 'code' => $validatedData['code'],
                 'description' => $validatedData['description'],
                 'currency_id' => $validatedData['currency_id'],
+                'bank_id' => $validatedData['bank_id'],
                 'active' => $validatedData['active'],
             ]);
 
