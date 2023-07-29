@@ -8,6 +8,8 @@ use App\Http\Controllers\Traits\ResponseApi;
 
 class BankController extends Controller
 {
+    use ResponseApi;
+    
     /**
      * Display a listing of the resource.
      *
