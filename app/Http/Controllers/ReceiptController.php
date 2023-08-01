@@ -99,7 +99,11 @@ class ReceiptController extends Controller
 
             $actualAmount = $this->calculateActualAmount($validatedData);
 
-            if ($this->isAmountValid($validatedData, $actualAmount)) {
+            if (!$this->isAmountValid($validatedData, $actualAmount)) {
+                return $this->getError($this->newMessageBag('El saldo de la cuenta no es suficiente'), $ERROR_MESSAGE);
+            } else if(!$this->validAccountAndCurency($validatedData)) {
+                return $this->getError($this->newMessageBag('Esta cuenta no es del tipo de moneda seleccionada'), $ERROR_MESSAGE);
+            } else {
                 $receipt = Receipt::create([
                     'date' => $validatedData['date'],
                     'concept_id' => $validatedData['concept_id'],
@@ -115,8 +119,7 @@ class ReceiptController extends Controller
                 } else {
                     return $this->getError($this->newMessageBag('Hubo un error al crear el comprobante, inténtelo de nuevo.'), $ERROR_MESSAGE);
                 }
-            } else {
-                return $this->getError($this->newMessageBag('El saldo de la cuenta no es suficiente'), $ERROR_MESSAGE);
+
             }
         } catch (\Exception $e) {
             return $this->responseError($e, $ERROR_MESSAGE );
@@ -164,7 +167,11 @@ class ReceiptController extends Controller
             
             $actualAmount = $this->calculateActualAmount($validatedData);
 
-            if ($this->isAmountValid($validatedData, $actualAmount)) {
+            if (!$this->isAmountValid($validatedData, $actualAmount)) {
+                return $this->getError($this->newMessageBag('El saldo de la cuenta no es suficiente'), $ERROR_MESSAGE);
+            } else if(!$this->validAccountAndCurency($validatedData)) {
+                return $this->getError($this->newMessageBag('Esta cuenta no es del tipo de moneda seleccionada'), $ERROR_MESSAGE);
+            } else {    
                 $updated = $receipt->update([
                     'date' => $validatedData['date'],
                     'concept_id' => $validatedData['concept_id'],
@@ -180,9 +187,7 @@ class ReceiptController extends Controller
                 } else {
                     return $this->getError($this->newMessageBag('Hubo un error al actualizar el comprobante, inténtelo de nuevo.'), $ERROR_MESSAGE);
                 }
-            } else {
-                return $this->getError($this->newMessageBag('El saldo de la cuenta no es suficiente'), $ERROR_MESSAGE);
-            }
+            } 
         } catch (\Exception $e) {
             return $this->responseError($e, $ERROR_MESSAGE);
         }
@@ -234,6 +239,16 @@ class ReceiptController extends Controller
     private function calculateActualAmount($data)
     {
         return Utils::getExchangeRate($data['currency_id']) * $data['amount'];
+    }
+
+    /** 
+     * Return if account is of the same type of the currency
+     * 
+     * @param   array  $data
+     * @return  boolean
+     * */ 
+    private function validAccountAndCurency($data) {
+        return Utils::accountOfTypeCurrency($data['account_id'], $data['currency_id']) !== 0;        
     }
     
 }
