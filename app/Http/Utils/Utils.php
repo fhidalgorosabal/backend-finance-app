@@ -2,6 +2,7 @@
 
 namespace App\Http\Utils;
 
+use App\Models\Account;
 use App\Models\Currency;
 use App\Models\Concept;
 use App\Models\Receipt;
@@ -29,6 +30,11 @@ class Utils {
                 $query->where('type', $conceptType);
             })
             ->sum('actual_amount');
+    }
+
+    public static function accountOfTypeCurrency($account_id, $currency_id)
+    {
+        return Account::where('id', $account_id)->where('currency_id', $currency_id)->count();        
     }
 
 }
