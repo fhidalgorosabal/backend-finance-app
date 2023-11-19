@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
+            $table->string('company_code', 20);
+            $table->string('company_name', 200);
             $table->string('current_month', 2);
             $table->string('current_year', 4);
             $table->timestamps();

@@ -8,6 +8,7 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,7 @@ Route::post('receipt/list', [ ReceiptController::class, 'list' ]);
 Route::apiResource('account', AccountController::class);
 
 Route::apiResource('bank', BankController::class);
+
+Route::get('setting', [ SettingController::class, 'getSetting' ]);
+
+Route::post('setting/change-month', [ SettingController::class, 'changeMonth' ]);

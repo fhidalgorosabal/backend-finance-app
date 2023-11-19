@@ -3,84 +3,42 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setting;
-use App\Http\Requests\StoreSettingRequest;
-use App\Http\Requests\UpdateSettingRequest;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Traits\ResponseApi;
 
 class SettingController extends Controller
 {
+    use ResponseApi;
+
     /**
-     * Display a listing of the resource.
+     * Display setting.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getSetting()
     {
-        //
+        $setting = Setting::find('1');   
+        return $this->responseData($setting, 'Configuración del sistema');  
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
+     * Change of month
+     * 
+     * @param  int  $month
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+    public function changeMonth(Request $request) {
+        try {    
+            $validatedData = $request->validate([
+                'month' => 'required|numeric'
+            ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreSettingRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreSettingRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateSettingRequest  $request
-     * @param  \App\Models\Setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateSettingRequest $request, Setting $setting)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Setting  $setting
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Setting $setting)
-    {
-        //
+            $setting = Setting::find('1');   
+            $setting->current_month = $validatedData['month'];
+            $setting->save();
+            return $this->responseData($setting, 'Se ha realizado el cambio de mes correctamente.');
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'No se pudo realizar el cambio de mes.');
+        }
     }
 }
