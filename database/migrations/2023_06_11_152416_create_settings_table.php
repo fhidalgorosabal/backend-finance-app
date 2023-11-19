@@ -13,9 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('receipts', function (Blueprint $table) {
-            $table->unsignedBigInteger('account_id')->after('actual_amount');
-            $table->foreign('account_id')->references('id')->on('accounts');
+        Schema::create('settings', function (Blueprint $table) {
+            $table->id();
+            $table->string('company_code', 20);
+            $table->string('company_name', 200);
+            $table->string('current_month', 2);
+            $table->string('current_year', 4);
+            $table->timestamps();
         });
     }
 
@@ -26,9 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('receipts', function (Blueprint $table) {            
-            $table->dropForeign(['account_id']);
-            $table->dropColumn('account_id');
-        });
+        Schema::dropIfExists('settings');
     }
 };

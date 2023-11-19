@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('swift', 25);
             $table->string('bank_name', 100);
             $table->string('cis', 10);
-            $table->string('branch_name', 100);
+            $table->string('branch_name', 100)->nullable();
             $table->string('address', 200)->nullable();
             $table->string('phone_number', 15)->nullable();
             $table->string('email', 100)->nullable();

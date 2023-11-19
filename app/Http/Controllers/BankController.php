@@ -31,10 +31,10 @@ class BankController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'swift' => 'required|string|max:25|unique:banks',
-                'bank_name' => 'required|string|max:100|unique:banks',
+                'swift' => 'required|string|max:25',
+                'bank_name' => 'required|string|max:100',
                 'cis' => 'required|string|max:10|unique:banks',
-                'branch_name' => 'required|string|max:100|unique:banks',
+                'branch_name' => 'nullable|string|max:100|unique:banks',
                 'address' => 'nullable|string|max:200|unique:banks',
                 'phone_number' => 'nullable|string|max:15|unique:banks',
                 'email' => 'nullable|email|max:100|unique:banks'    
@@ -86,10 +86,10 @@ class BankController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'swift' => 'required|string|max:25|unique:banks,swift,'.$id,
-                'bank_name' => 'required|string|max:100|unique:banks,bank_name,'.$id,
+                'swift' => 'required|string|max:25',
+                'bank_name' => 'required|string|max:100',
                 'cis' => 'required|string|max:10|unique:banks,cis,'.$id,
-                'branch_name' => 'required|string|max:100|unique:banks,branch_name,'.$id,
+                'branch_name' => 'nullable|string|max:100|unique:banks,branch_name,'.$id,
                 'address' => 'nullable|string|max:200|unique:banks,address,'.$id,
                 'phone_number' => 'nullable|string|max:15|unique:banks,phone_number,'.$id,
                 'email' => 'nullable|email|max:100|unique:banks,email,'.$id,   
