@@ -31,20 +31,22 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 |--------------------------------------------------------------------------
 |
 */
-Route::apiResource('concept', ConceptController::class);
+Route::group(['middleware' => ['jwt.auth']], function () {
+    Route::apiResource('concept', ConceptController::class);
 
-Route::post('concept/list', [ ConceptController::class, 'list' ]);
+    Route::post('concept/list', [ ConceptController::class, 'list' ]);
 
-Route::apiResource('currency', CurrencyController::class);
+    Route::apiResource('currency', CurrencyController::class);
 
-Route::apiResource('receipt', ReceiptController::class);
+    Route::apiResource('receipt', ReceiptController::class);
 
-Route::post('receipt/list', [ ReceiptController::class, 'list' ]);
+    Route::post('receipt/list', [ ReceiptController::class, 'list' ]);
 
-Route::apiResource('account', AccountController::class);
+    Route::apiResource('account', AccountController::class);
 
-Route::apiResource('bank', BankController::class);
+    Route::apiResource('bank', BankController::class);
 
-Route::get('setting', [ SettingController::class, 'getSetting' ]);
+    Route::get('setting', [ SettingController::class, 'getSetting' ]);
 
-Route::post('setting/change-month', [ SettingController::class, 'changeMonth' ]);
+    Route::post('setting/change-month', [ SettingController::class, 'changeMonth' ]);
+});

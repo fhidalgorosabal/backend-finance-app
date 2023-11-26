@@ -65,7 +65,7 @@ class AuthController extends Controller
 
             return $this->responseData([
                 'token' => $this->respondWithToken($token),
-            ], 'Usuario autenticado.');
+            ], 'Usuario autenticado correctamente.');
         } catch (\Exception $e) {
             return $this->responseError($e, 'Credenciales incorrectas.');
         }
@@ -90,7 +90,7 @@ class AuthController extends Controller
     {
         auth()->logout();
 
-        return $this->responseData([], 'Sesión finalizada.');
+        return $this->responseData([], 'Se ha cerrado la sesión correctamente.');
     }
 
     /**
