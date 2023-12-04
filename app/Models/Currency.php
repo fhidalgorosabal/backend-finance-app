@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Receipt;
+use App\Models\Company;
 
 class Currency extends Model
 {
@@ -19,12 +20,18 @@ class Currency extends Model
         'initials',
         'description',
         'exchange_rate',
-        'is_default',
+        'is_default',      
+        'company_id',
         'active'
     ];
 
     public function receipts()
     {
         return $this->hasMany(Receipt::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

@@ -18,10 +18,12 @@ return new class extends Migration
             $table->string('code', 20);
             $table->string('description', 100);
             $table->unsignedBigInteger('currency_id');
+            $table->unsignedBigInteger('company_id');
             $table->boolean('active')->default(true);
             $table->timestamps();
-
+            
             $table->foreign('currency_id')->references('id')->on('currencies');
+            $table->foreign('company_id')->references('id')->on('companies');
         });
     }
 

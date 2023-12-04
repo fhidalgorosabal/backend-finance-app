@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Receipt;
+use App\Models\Company;
 
 class Concept extends Model
 {
@@ -17,11 +18,17 @@ class Concept extends Model
      */
     protected $fillable = [
         'description',
-        'type'
+        'type',        
+        'company_id'
     ];
 
     public function receipts()
     {
         return $this->hasMany(Receipt::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

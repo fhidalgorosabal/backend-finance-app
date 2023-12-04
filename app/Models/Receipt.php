@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Concept;
 use App\Models\Currency;
 use App\Models\Account;
+use App\Models\Company;
 
 class Receipt extends Model
 {
@@ -24,7 +25,8 @@ class Receipt extends Model
         'amount',
         'currency_id',
         'actual_amount',
-        'account_id'
+        'account_id',
+        'company_id'
     ];
 
     public function currency()
@@ -40,5 +42,10 @@ class Receipt extends Model
     public function account()
     {
         return $this->belongsTo(Account::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

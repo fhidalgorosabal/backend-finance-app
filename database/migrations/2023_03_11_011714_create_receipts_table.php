@@ -21,10 +21,12 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->unsignedBigInteger('currency_id');
             $table->decimal('actual_amount', 10, 2);
+            $table->unsignedBigInteger('company_id');
             $table->timestamps();
 
             $table->foreign('concept_id')->references('id')->on('concepts');
             $table->foreign('currency_id')->references('id')->on('currencies');
+            $table->foreign('company_id')->references('id')->on('companies');
         });
     }
 

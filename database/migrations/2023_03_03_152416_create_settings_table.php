@@ -13,15 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('currencies', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('initials', 3);
-            $table->string('description', 100);
-            $table->decimal('exchange_rate', 10, 2);
+            $table->string('current_month', 2);
+            $table->string('current_year', 4);
             $table->unsignedBigInteger('company_id');
-            $table->boolean('is_default')->default(false);
-            $table->timestamps();    
-            
+            $table->timestamps();
+
             $table->foreign('company_id')->references('id')->on('companies');
         });
     }
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('currencies');
+        Schema::dropIfExists('settings');
     }
 };

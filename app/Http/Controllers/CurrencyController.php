@@ -22,6 +22,27 @@ class CurrencyController extends Controller
     }
 
     /**
+     * Display a listing of the resource for company.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        try {            
+            $validatedData = $request->validate([          
+                'company_id' => 'required'
+            ]);
+
+            $currencies = Currency::where('company_id', $validatedData['company_id'])->get();
+            return $this->responseData($currencies, 'Listado de las monedas');
+
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'No se pudo obtener el listado de monedas.');
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -33,7 +54,8 @@ class CurrencyController extends Controller
             $validatedData = $request->validate([
                 'initials' => 'required|string|max:3|unique:currencies',
                 'description' => 'required|string|max:100|unique:currencies',
-                'exchange_rate' => 'required|numeric',
+                'exchange_rate' => 'required|numeric',              
+                'company_id' => 'required',
                 'is_default' => 'nullable|boolean'
             ]);
 
@@ -41,6 +63,7 @@ class CurrencyController extends Controller
                 'initials' => $validatedData['initials'],
                 'description' => $validatedData['description'],
                 'exchange_rate' => $validatedData['exchange_rate'],
+                'company_id' => $validatedData['company_id'],
                 'is_default' => $validatedData['is_default'],
                 'active' => true
             ]);
@@ -82,7 +105,8 @@ class CurrencyController extends Controller
             $validatedData = $request->validate([
                 'initials' => 'required|string|max:3|unique:currencies,initials,'.$id,
                 'description' => 'required|string|max:100|unique:currencies,description,'.$id,
-                'exchange_rate' => 'required|numeric',
+                'exchange_rate' => 'required|numeric',             
+                'company_id' => 'required',
                 'is_default' => 'nullable|boolean',
                 'active' => 'nullable|boolean'
             ]);
@@ -93,6 +117,7 @@ class CurrencyController extends Controller
                 'initials' => $validatedData['initials'],
                 'description' => $validatedData['description'],
                 'exchange_rate' => $validatedData['exchange_rate'],
+                'company_id' => $validatedData['company_id'],
                 'is_default' => $validatedData['is_default'],
                 'active' => $validatedData['active'],
             ]);

@@ -38,15 +38,19 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::apiResource('currency', CurrencyController::class);
 
+    Route::post('currency/list', [ CurrencyController::class, 'list' ]);
+
     Route::apiResource('receipt', ReceiptController::class);
 
     Route::post('receipt/list', [ ReceiptController::class, 'list' ]);
 
     Route::apiResource('account', AccountController::class);
 
+    Route::post('account/list', [ AccountController::class, 'list' ]);
+
     Route::apiResource('bank', BankController::class);
 
-    Route::get('setting', [ SettingController::class, 'getSetting' ]);
+    Route::post('setting', [ SettingController::class, 'getSetting' ]);
 
     Route::post('setting/change-month', [ SettingController::class, 'changeMonth' ]);
 });
