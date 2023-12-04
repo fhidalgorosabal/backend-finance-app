@@ -22,6 +22,27 @@ class AccountController extends Controller
     }
 
     /**
+     * Display a listing of the resource for company.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function list(Request $request)
+    {
+        try {            
+            $validatedData = $request->validate([          
+                'company_id' => 'required'
+            ]);
+
+            $accounts = Account::where('company_id', $validatedData['company_id'])->get();
+            return $this->responseData($accounts, 'Listado de las cuentas');
+
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'No se pudo obtener el listado de cuentas.');
+        }
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\Request  $request
@@ -34,14 +55,16 @@ class AccountController extends Controller
                 'code' => 'required|string|max:20|unique:accounts',
                 'description' => 'required|string|max:100|unique:accounts',
                 'currency_id' => 'required',      
-                'bank_id' => 'required'      
+                'bank_id' => 'nullable|numeric',              
+                'company_id' => 'required'  
             ]);
 
             $account = Account::create([
                 'code' => $validatedData['code'],
                 'description' => $validatedData['description'],
                 'currency_id' => $validatedData['currency_id'],
-                'bank_id' => $validatedData['bank_id'],
+                'bank_id' => $validatedData['bank_id'] ?? null,
+                'company_id' => $validatedData['company_id'],
                 'active' => true
             ]);
 
@@ -83,7 +106,8 @@ class AccountController extends Controller
                 'code' => 'required|string|max:20|unique:accounts,code,'.$id,
                 'description' => 'required|string|max:100|unique:accounts,description,'.$id,
                 'currency_id' => 'required',     
-                'bank_id' => 'required', 
+                'bank_id' => 'nullable|numeric',              
+                'company_id' => 'required',
                 'active' => 'nullable|boolean'   
             ]);
 
@@ -93,7 +117,8 @@ class AccountController extends Controller
                 'code' => $validatedData['code'],
                 'description' => $validatedData['description'],
                 'currency_id' => $validatedData['currency_id'],
-                'bank_id' => $validatedData['bank_id'],
+                'bank_id' => $validatedData['bank_id'] ?? null,
+                'company_id' => $validatedData['company_id'],
                 'active' => $validatedData['active'],
             ]);
 

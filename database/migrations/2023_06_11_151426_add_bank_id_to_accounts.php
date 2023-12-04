@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->unsignedBigInteger('bank_id')->after('currency_id');
+            $table->unsignedBigInteger('bank_id')->after('currency_id')->nullable();
             $table->foreign('bank_id')->references('id')->on('banks');
         });
     }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Receipt;
 use App\Models\Bank;
+use App\Models\Company;
 
 class Account extends Model
 {
@@ -21,6 +22,7 @@ class Account extends Model
         'description',
         'currency_id',
         'bank_id',
+        'company_id',
         'active'
     ];
 
@@ -32,5 +34,10 @@ class Account extends Model
     public function bank()
     {
         return $this->belongsTo(Bank::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

@@ -26,20 +26,17 @@ class AuthController extends Controller
                 'name' => 'required|string|max:100|unique:users',
                 'email' => 'required|email|max:255|unique:users',
                 'password' => 'required|string|min:8|confirmed',
+                'company_id' => 'required',
             ]);
 
             $user = User::create([
                 'name' => $validatedData['name'],
                 'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password'])
+                'password' => Hash::make($validatedData['password']),                
+                'company_id' => $validatedData['company_id']
             ]);
 
-            $token = JWTAuth::fromUser($user);
-
-            return $this->responseData([
-                'user' => $user,
-                'token' => $this->respondWithToken($token),
-            ], 'Se ha registrado el usuario correctamente.', 201);
+            return $this->responseData($user, 'Se ha registrado el usuario correctamente.', 201);
         } catch (\Exception $e) {
             return $this->responseError($e, 'No se pudo registrar el usuario.');
         }
@@ -53,6 +50,7 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        $user = null;
         try {
             $validatedData = $request->validate([
                 'email' => 'required|email|max:255',
@@ -62,8 +60,11 @@ class AuthController extends Controller
             if (! $token = JWTAuth::attempt($validatedData)) {
                 throw new UnauthorizedHttpException('Unauthorized', 'El email o la contraseña son incorrectos.');
             }
+            
+            $user = User::where('email', $validatedData['email'])->first();
 
             return $this->responseData([
+                'user' => $user,
                 'token' => $this->respondWithToken($token),
             ], 'Usuario autenticado correctamente.');
         } catch (\Exception $e) {

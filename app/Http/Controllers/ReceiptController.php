@@ -30,7 +30,7 @@ class ReceiptController extends Controller
     }
 
     /**
-     * Display a listing of the resource for type.
+     * Display a listing of the resource for type and company.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -39,10 +39,11 @@ class ReceiptController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'type' => 'required|in:Expense,Ingress'
+                'type' => 'required|in:Expense,Ingress',                
+                'company_id' => 'required'
             ]);
 
-            $receipts = $this->getReceipts($validatedData['type']);
+            $receipts = $this->getReceipts($validatedData['company_id'], $validatedData['type']);
             return $this->responseData($receipts, 'Listado de los comprobantes de '.$this->getTypeName($validatedData['type']));
 
         } catch (\Exception $e) {
@@ -53,26 +54,30 @@ class ReceiptController extends Controller
     /**
      *  Returns a listing of the resource.
      *
+     * @param  string  $companyId  Company Id or null. 
      * @param  string  $type  Receipt type or null. [ Expense,Ingress ]
      * @return \Illuminate\Http\Response
      */
-    private function getReceipts($type = null)
+    private function getReceipts($companyId = null, $type = null)
     {
         $result = Receipt::join('concepts', 'receipts.concept_id', '=', 'concepts.id')
-                    ->join('currencies', 'receipts.currency_id', '=', 'currencies.id')
-                    ->join('accounts', 'receipts.account_id', '=', 'accounts.id')
-                    ->select(
-                        'receipts.id',
-                        'receipts.amount',
-                        'receipts.date',
-                        'concepts.description as concept',
-                        'concepts.type as type',
-                        'currencies.initials as currency',
-                        'accounts.description as account',
-                        'receipts.actual_amount',
-                    );
+            ->join('currencies', 'receipts.currency_id', '=', 'currencies.id')
+            ->join('accounts', 'receipts.account_id', '=', 'accounts.id')
+            ->select([
+                'receipts.id',
+                'receipts.amount',
+                'receipts.date',
+                'concepts.description as concept',
+                'concepts.type as type',
+                'currencies.initials as currency',
+                'accounts.description as account',
+                'receipts.actual_amount',
+            ]);
+        if ($companyId) {
+            $result->where('receipts.company_id', $companyId);
+        }
         if ($type) {
-            $result = $result->where('concepts.type', '=', $type);
+            $result->where('concepts.type', $type);
         }
         return $result->get();
     }
@@ -94,7 +99,8 @@ class ReceiptController extends Controller
                 'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
                 'currency_id' => 'required',
-                'account_id' => 'required'
+                'account_id' => 'required',              
+                'company_id' => 'required'
             ]);
 
             $actualAmount = $this->calculateActualAmount($validatedData);
@@ -111,6 +117,7 @@ class ReceiptController extends Controller
                     'amount' => doubleval($validatedData['amount']),
                     'currency_id' => $validatedData['currency_id'],
                     'account_id' => $validatedData['account_id'],
+                    'company_id' => $validatedData['company_id'],
                     'actual_amount' => doubleval($actualAmount),
                 ]);
 
@@ -160,7 +167,8 @@ class ReceiptController extends Controller
                 'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
                 'currency_id' => 'required',
-                'account_id' => 'required'
+                'account_id' => 'required',              
+                'company_id' => 'required'
             ]);
 
             $receipt = Receipt::findOrFail($id);
@@ -179,6 +187,7 @@ class ReceiptController extends Controller
                     'amount' => doubleval($validatedData['amount']),
                     'currency_id' => $validatedData['currency_id'],
                     'account_id' => $validatedData['account_id'],
+                    'company_id' => $validatedData['company_id'],
                     'actual_amount' => doubleval($actualAmount),
                 ]);
 

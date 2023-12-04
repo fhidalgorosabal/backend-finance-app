@@ -24,7 +24,7 @@ class ConceptController extends Controller
     }
 
     /**
-     * Display a listing of the resource for type.
+     * Display a listing of the resource for type and company.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -33,10 +33,11 @@ class ConceptController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'type' => 'required|in:Expense,Ingress'
+                'type' => 'required|in:Expense,Ingress',              
+                'company_id' => 'required'
             ]);
 
-            $concepts = $this->getConcepts($validatedData['type']);
+            $concepts = $this->getConcepts($validatedData['company_id'], $validatedData['type']);
             return $this->responseData($concepts, 'Listado de los conceptos de '.$this->getTypeName($validatedData['type']));
 
         } catch (\Exception $e) {
@@ -47,16 +48,22 @@ class ConceptController extends Controller
     /**
      *  Returns a listing of the resource.
      *
+     * @param  string  $companyId  Company Id or null. 
      * @param  string  $type  Receipt type or null. [ Expense,Ingress ]
      * @return \Illuminate\Http\Response
      */
-    private function getConcepts($type = null)
+    private function getConcepts($companyId = null, $type = null)
     {
-        if ($type) {
-            return Concept::where('type', '=', $type)->get();
-        } else {
-            return Concept::get();
+        $result = Concept::query();
+
+        if ($companyId) {
+            $result->where('company_id', $companyId);
         }
+        if ($type) {
+            $result->where('type', $type);
+        } 
+
+        return $result->get();
     }
 
     /**
@@ -70,12 +77,14 @@ class ConceptController extends Controller
         try {
             $validatedData = $request->validate([
                 'description' => 'required|string|max:255|unique:concepts',
-                'type' => 'required|in:Expense,Ingress'
+                'type' => 'required|in:Expense,Ingress',              
+                'company_id' => 'required'
             ]);
 
             $concept = Concept::create([
                 'description' => $validatedData['description'],
-                'type' => $validatedData['type']
+                'type' => $validatedData['type'],
+                'company_id' => $validatedData['company_id']
             ]);
 
             if ($concept) {
@@ -114,14 +123,16 @@ class ConceptController extends Controller
         try {
             $validatedData = $request->validate([
                 'description' => 'required|string|max:255|unique:concepts,description,'.$id,
-                'type' => 'required|in:Expense,Ingress'
+                'type' => 'required|in:Expense,Ingress',             
+                'company_id' => 'required'
             ]);
 
             $concept = Concept::findOrFail($id);
             
             $updated = $concept->update([
                 'description' => $validatedData['description'],
-                'type' => $validatedData['type']
+                'type' => $validatedData['type'],
+                'company_id' => $validatedData['company_id']
             ]);
 
             if ($updated) {

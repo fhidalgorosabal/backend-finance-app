@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('settings', function (Blueprint $table) {
-            $table->id();
-            $table->string('company_code', 20);
-            $table->string('company_name', 200);
-            $table->string('current_month', 2);
-            $table->string('current_year', 4);
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {            
+            $table->unsignedBigInteger('company_id')->after('password');
+            $table->foreign('company_id')->references('id')->on('companies');
         });
     }
 
@@ -30,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('settings');
+        Schema::table('users', function (Blueprint $table) {        
+            $table->dropForeign(['company_id']);
+            $table->dropColumn('company_id');
+        });
     }
 };
