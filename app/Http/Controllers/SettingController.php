@@ -29,7 +29,8 @@ class SettingController extends Controller
                     'settings.current_year',
                     'settings.current_month',
                     'companies.company_code',
-                    'companies.company_name'
+                    'companies.company_name',
+                    'companies.type'
                 ])->first();
 
             if ($setting) {

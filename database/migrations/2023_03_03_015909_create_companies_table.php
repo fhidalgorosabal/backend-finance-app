@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('company_code', 20);
             $table->string('company_name', 200);
+            $table->enum('type', [1, 2]);
             $table->timestamps();
         });
     }

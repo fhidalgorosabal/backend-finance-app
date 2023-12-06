@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConceptController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,4 +54,6 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('setting', [ SettingController::class, 'getSetting' ]);
 
     Route::post('setting/change-month', [ SettingController::class, 'changeMonth' ]);
+
+    Route::post('dashboard/get-month-total', [ DashboardController::class, 'getMonthTotal' ]);
 });
