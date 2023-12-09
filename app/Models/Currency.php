@@ -25,6 +25,12 @@ class Currency extends Model
         'active'
     ];
 
+    
+    static public function clearDefaultCurrency()
+    {
+        self::where('is_default', true)->update(['is_default' => false]);
+    }
+
     public function receipts()
     {
         return $this->hasMany(Receipt::class);

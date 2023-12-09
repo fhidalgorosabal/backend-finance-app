@@ -132,6 +132,44 @@ class CurrencyController extends Controller
     }
 
     /**
+     * Display the default currency.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function defaultCurrency(int $company_id)
+    {
+        try {
+            $currency = Currency::where('is_default', true)->where('company_id', $company_id)->first();
+            return $this->responseData($currency, 'Moneda predeterminada.');
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'No se pudo obtener la moneda predeterminada.');
+        }
+    }
+
+    /**
+     * Update the default currency.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function postDefaultCurrency(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'id' => 'required|numeric',
+            ]);
+
+            $currency = Currency::findOrFail($validatedData['id']);
+            Currency::clearDefaultCurrency();
+            $currency->update(['is_default' => true, 'exchange_rate' => 1]);
+
+            return $this->responseData($currency, 'Moneda predeterminada actualizada correctamente.');
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'No se pudo actualizar la moneda predeterminada.');
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
