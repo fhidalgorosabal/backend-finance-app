@@ -41,6 +41,10 @@ Route::group(['middleware' => ['jwt.auth']], function () {
 
     Route::post('currency/list', [ CurrencyController::class, 'list' ]);
 
+    Route::get('currency/default-currency/{company_id}', [ CurrencyController::class, 'defaultCurrency' ]);
+
+    Route::post('currency/default-currency', [ CurrencyController::class, 'postDefaultCurrency' ]);
+
     Route::apiResource('receipt', ReceiptController::class);
 
     Route::post('receipt/list', [ ReceiptController::class, 'list' ]);
