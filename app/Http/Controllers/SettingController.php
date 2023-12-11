@@ -19,9 +19,7 @@ class SettingController extends Controller
     public function getSetting(Request $request)
     {
         try {
-            $validatedData = $request->validate([
-                'company_id' => 'required'
-            ]);
+            $validatedData = $request->validate(['company_id' => 'required']);
 
             $setting = Setting::join('companies', 'settings.company_id', '=', 'companies.id')
                 ->where('settings.company_id', $validatedData['company_id'])
@@ -44,11 +42,10 @@ class SettingController extends Controller
         }
     }
 
-
     /**
      * Change of month
      * 
-     * @param  int  $month
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function changeMonth(Request $request) {
@@ -63,6 +60,25 @@ class SettingController extends Controller
             return $this->responseData($setting, 'Se ha realizado el cambio de mes correctamente.');
         } catch (\Exception $e) {
             return $this->responseError($e, 'No se pudo realizar el cambio de mes.');
+        }
+    }
+
+    /**
+     * Cierre of year
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function closeYear(Request $request)
+    {
+        try {    
+            $validatedData = $request->validate(['company_id' => 'required']);
+
+            $setting = Setting::where('company_id', $validatedData['company_id'])->first();  
+            $setting->closeYear();
+            return $this->responseData($setting, 'Cierre de año completado con éxito.');
+        } catch (\Exception $e) {
+            return $this->responseError($e, 'No se pudo realizar el cierre de año.');
         }
     }
 }
