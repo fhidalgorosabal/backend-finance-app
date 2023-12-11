@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Traits\ResponseApi;
 use App\Http\Controllers\Traits\Type;
 use App\Http\Utils\Utils;
+use App\Models\Setting;
 use App\Rules\ValidateSameMonth;
+use App\Rules\ValidateSameYear;
 
 class ReceiptController extends Controller
 {
@@ -42,8 +44,9 @@ class ReceiptController extends Controller
                 'type' => 'required|in:Expense,Ingress',                
                 'company_id' => 'required'
             ]);
+            $currentMonth = Setting::where('company_id', $validatedData['company_id'])->value('current_month');
 
-            $receipts = $this->getReceipts($validatedData['company_id'], $validatedData['type']);
+            $receipts = $this->getReceipts($validatedData['company_id'], $validatedData['type'], $currentMonth);
             return $this->responseData($receipts, 'Listado de los comprobantes de '.$this->getTypeName($validatedData['type']));
 
         } catch (\Exception $e) {
@@ -58,8 +61,9 @@ class ReceiptController extends Controller
      * @param  string  $type  Receipt type or null. [ Expense,Ingress ]
      * @return \Illuminate\Http\Response
      */
-    private function getReceipts($companyId = null, $type = null)
+    private function getReceipts($companyId = null, $type = null, $currentMonth = null)
     {
+
         $result = Receipt::join('concepts', 'receipts.concept_id', '=', 'concepts.id')
             ->join('currencies', 'receipts.currency_id', '=', 'currencies.id')
             ->join('accounts', 'receipts.account_id', '=', 'accounts.id')
@@ -73,11 +77,15 @@ class ReceiptController extends Controller
                 'accounts.description as account',
                 'receipts.actual_amount',
             ]);
-        if ($companyId) {
-            $result->where('receipts.company_id', $companyId);
-        }
+            
         if ($type) {
             $result->where('concepts.type', $type);
+        }
+        if ($currentMonth) {
+            $result->whereMonth('receipts.date', $currentMonth);
+        }
+        if ($companyId) {
+            $result->where('receipts.company_id', $companyId);
         }
         return $result->get();
     }
@@ -94,7 +102,7 @@ class ReceiptController extends Controller
 
         try {
             $validatedData = $request->validate([
-                'date' => ['required', 'date', 'date_format:Y/m/d', new ValidateSameMonth],
+                'date' => ['required', 'date', 'date_format:Y/m/d', new ValidateSameMonth, new ValidateSameYear],
                 'concept_id' => 'required',
                 'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
@@ -162,7 +170,7 @@ class ReceiptController extends Controller
 
         try {
             $validatedData = $request->validate([
-                'date' => ['required', 'date', 'date_format:Y/m/d', new ValidateSameMonth],
+                'date' => ['required', 'date', 'date_format:Y/m/d', new ValidateSameMonth, new ValidateSameYear],
                 'concept_id' => 'required',
                 'description' => 'nullable|string|max:150',
                 'amount' => 'required|numeric',
