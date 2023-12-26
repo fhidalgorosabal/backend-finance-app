@@ -62,4 +62,9 @@ Route::group(['middleware' => ['jwt.auth']], function () {
     Route::post('/setting/close-year', [ SettingController::class, 'closeYear' ]);
 
     Route::post('/dashboard/get-month-total', [ DashboardController::class, 'getMonthTotal' ]);
+
+    Route::post('/dashboard/get-month-concepts', [ DashboardController::class, 'getMonthConcepts' ]);
+
+    Route::post('/dashboard/get-ingress-expenses-month', [ DashboardController::class, 'getIngressAndExpenseByMonth' ]);
+    
 });
