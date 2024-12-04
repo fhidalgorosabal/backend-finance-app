@@ -1,64 +1,112 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Backend Finance App
 
-## About Laravel
+**Backend Finance App** es una API RESTful desarrollada en Laravel 9.0.0. Proporciona servicios para la gestión de ingresos y gastos personales o empresariales, soportando autenticación basada en **JWT** mediante `laravel-sanctum` y `jwt-auth`.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Características principales
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Autenticación segura**: Implementación de JWT para proteger los endpoints.
+- **Gestión financiera**:
+  - CRUD de conceptos.
+  - CRUD de ingresos y gastos.
+  - CRUD de bancos y cuentas bancarias.
+  - CRUD de monedas y categorías.
+- **Endpoints RESTful**: Organización y acceso claro a través de recursos API.
+- **Migraciones**: Base de datos fácil de gestionar mediante migraciones.
+- **Protección de rutas**: Rutas seguras usando middleware de autenticación.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Requisitos previos
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
-## Laravel Sponsors
+- [PHP](https://www.php.net/) >= 8.0
+- [Composer](https://getcomposer.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Laravel CLI](https://laravel.com/docs/9.x)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+---
 
-### Premium Partners
+## Instalación y configuración
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+1. Clona este repositorio:
+   ```bash
+   git clone https://github.com/tu-usuario/backend-finance-app.git
+   cd backend-finance-app
+   php artisan migrate
+   php artisan serve
+   http://localhost:8000/
+   
+---
 
-## Contributing
+## Endpoints principales
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Autenticación
+- **POST** `/register`: Registrar un nuevo usuario.
+- **POST** `/login`: Iniciar sesión.
+- **GET** `/profile`: Obtener la información del usuario autenticado.
+- **POST** `/refresh`: Actualizar el token de autenticación.
+- **POST** `/logout`: Cerrar sesión.
 
-## Code of Conduct
+### Gestión de conceptos
+- **GET** `/concept`: Listar todos los conceptos.
+- **POST** `/concept`: Crear un nuevo concepto.
+- **GET** `/concept/{id}`: Obtener los detalles de un concepto específico.
+- **PUT** `/concept/{id}`: Actualizar un concepto existente.
+- **DELETE** `/concept/{id}`: Eliminar un concepto.
+- **POST** `/concept/list`: Obtener una lista filtrada de conceptos.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Gestión de monedas
+- **GET** `/currency`: Listar todas las monedas.
+- **POST** `/currency`: Crear una nueva moneda.
+- **GET** `/currency/{id}`: Obtener los detalles de una moneda específica.
+- **PUT** `/currency/{id}`: Actualizar una moneda existente.
+- **DELETE** `/currency/{id}`: Eliminar una moneda.
+- **POST** `/currency/list`: Obtener una lista filtrada de monedas.
+- **GET** `/currency/default-currency/{company_id}`: Obtener la moneda por defecto para una empresa específica.
+- **POST** `/currency/default-currency`: Establecer una moneda como predeterminada.
 
-## Security Vulnerabilities
+### Gestión de recibos
+- **GET** `/receipt`: Listar todos los recibos.
+- **POST** `/receipt`: Crear un nuevo recibo.
+- **GET** `/receipt/{id}`: Obtener los detalles de un recibo específico.
+- **PUT** `/receipt/{id}`: Actualizar un recibo existente.
+- **DELETE** `/receipt/{id}`: Eliminar un recibo.
+- **POST** `/receipt/list`: Obtener una lista filtrada de recibos.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Gestión de cuentas
+- **GET** `/account`: Listar todas las cuentas.
+- **POST** `/account`: Crear una nueva cuenta.
+- **GET** `/account/{id}`: Obtener los detalles de una cuenta específica.
+- **PUT** `/account/{id}`: Actualizar una cuenta existente.
+- **DELETE** `/account/{id}`: Eliminar una cuenta.
+- **POST** `/account/list`: Obtener una lista filtrada de cuentas.
 
-## License
+### Gestión de bancos
+- **GET** `/bank`: Listar todos los bancos.
+- **POST** `/bank`: Crear un nuevo banco.
+- **GET** `/bank/{id}`: Obtener los detalles de un banco específico.
+- **PUT** `/bank/{id}`: Actualizar un banco existente.
+- **DELETE** `/bank/{id}`: Eliminar un banco.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Configuración
+- **POST** `/setting`: Obtener la configuración actual.
+- **POST** `/setting/change-month`: Cambiar el mes activo en el sistema.
+- **POST** `/setting/close-year`: Cerrar el año financiero.
+
+### Tablero de control (Dashboard)
+- **POST** `/dashboard/get-month-total`: Obtener el total de ingresos y gastos del mes actual.
+- **POST** `/dashboard/get-month-concepts`: Obtener los conceptos asociados al mes actual.
+- **POST** `/dashboard/get-ingress-expenses-month`: Obtener ingresos y gastos por mes.
+
+---
+
+## Autor
+
+Desarrollado por: Fernando Hidalgo Rosabal.
+
+---
