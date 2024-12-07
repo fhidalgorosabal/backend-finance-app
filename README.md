@@ -1,22 +1,6 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# BackendFinanceApp
 
-# Backend Finance App
-
-**Backend Finance App** es una API RESTful desarrollada en Laravel 9.0.0. Proporciona servicios para la gestión de ingresos y gastos personales o empresariales, soportando autenticación basada en **JWT** mediante `laravel-sanctum` y `jwt-auth`.
-
----
-
-## Características principales
-
-- **Autenticación segura**: Implementación de JWT para proteger los endpoints.
-- **Gestión financiera**:
-  - CRUD de conceptos.
-  - CRUD de ingresos y gastos.
-  - CRUD de bancos y cuentas bancarias.
-  - CRUD de monedas y categorías.
-- **Endpoints RESTful**: Organización y acceso claro a través de recursos API.
-- **Migraciones**: Base de datos fácil de gestionar mediante migraciones.
-- **Protección de rutas**: Rutas seguras usando middleware de autenticación.
+**BackendFinanceApp** es una API RESTful desarrollada en Laravel 9.0.0 que proporciona servicios para integrarse con la aplicación frontend (FinanceApp), facilita la sincronización y el manejo de datos financieros en tiempo real. Ofrece funcionalidades completas para la organización financiera, incluyendo la administración de conceptos, cuentas, monedas, bancos y recibos. Se utiliza **JWT** para la autenticación segura, implementado con los paquetes `laravel-sanctum` y `jwt-auth` y fue diseñada para utilizar PostgreSQL como sistema de base de datos.
 
 ---
 
@@ -33,13 +17,17 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
 ## Instalación y configuración
 
-1. Clona este repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/backend-finance-app.git
-   cd backend-finance-app
-   php artisan migrate
-   php artisan serve
-   http://localhost:8000/
+1. Clona este repositorio `git clone https://github.com/tu-usuario/backend-finance-app.git`.
+2. Accede a la carpeta del proyecto `cd backend-finance-app`.
+3. Crea la BD en PostgreSQL y configura el archivo `.env`:
+  - **DB_CONNECTION=pgsql**
+  - **DB_HOST=127.0.0.1**
+  - **DB_PORT=5432**
+  - **DB_DATABASE=finance_db**
+  - **DB_USERNAME=username**
+  - **DB_PASSWORD=password**
+4. Ejecuta `php artisan migrate` para crear las tablas necesarias mediante las migraciones.
+5. Para iniciar la aplicación `php artisan serve` y accede en el navedador a `http://localhost:8000/`.
    
 ---
 
@@ -108,5 +96,11 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 ## Autor
 
 Desarrollado por: Fernando Hidalgo Rosabal.
+
+---
+
+## Licencia
+
+Este proyecto está licenciado bajo la [Licencia MIT](https://opensource.org/licenses/MIT).
 
 ---
