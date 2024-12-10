@@ -17,7 +17,7 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
 ## Instalación y configuración
 
-1. Clona este repositorio `git clone https://github.com/tu-usuario/backend-finance-app.git`.
+1. Clona este repositorio `git clone https://github.com/fhidalgorosabal/backend-finance-app.git`.
 2. Accede a la carpeta del proyecto `cd backend-finance-app`.
 3. Crea la BD en PostgreSQL y configura el archivo `.env`:
   - `DB_CONNECTION=pgsql`            
